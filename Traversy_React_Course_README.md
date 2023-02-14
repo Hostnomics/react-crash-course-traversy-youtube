@@ -254,3 +254,164 @@ const Header = ({title}) => {
 
 ```
 
+
+## Create Tasks.js Component (40:34)
+
+1. create `components/Tasks.js`
+2. run `rafce + tab` 
+3. Set up array of predefined tasks so we can map through them
+```js
+const tasks = [
+    {
+        id: 1,
+        text: 'Doctors Appointment',
+        day: 'Feb 5th at 2:30pm',
+        reminder: true,
+    },
+    {
+        id: 2,
+        text: 'Meeting in Conference Room',
+        day: 'Feb 6th at 1:30pm',
+        reminder: true,
+    },
+    {
+        id: 3,
+        text: 'Food Shopping',
+        day: 'Feb 5th at 6:30pm',
+        reminder: false,
+    }
+];
+
+```
+
+At [41:18](https://youtu.be/w7ejDZ8SWv8?t=2478). we create a `list` with `.map()`
+
+
+Make sure to know: 
+1. foreach
+2. map
+3. filter
+
+
+In `Tasks.js` we don't need a parent `<div>` so we'll use a empty brackets to trigger JSX. 
+If you don't need any parent tag you can use an **empty fragment** which is `<>` and `</>`.
+
+```js
+const Tasks = () => {
+  return (
+    // 
+    <div>
+    {/*  */}
+    </div> 
+  )
+}
+
+//Called an empty `<>` and `</>
+const Tasks = () => {
+  return (
+    // 
+    <>
+    {/*  */}
+    </> 
+  )
+}
+
+```
+
+Then **map through our `tasks` array and print out the `tasks.text`**: 
+```js
+const Tasks = () => {
+  return (
+   // Empty fragment at (41:36)
+   <>
+    {/* {tasks.map()}
+    {tasks.map(() => ())} */}
+    {tasks.map((task) => (
+        <h3>{task.text}</h3>
+        ))}
+   </> 
+  )
+}
+
+```
+
+
+### Unique Key Prop id
+
+We get the warning message from the above; 
+>react_devtools_backend.js:4012 Warning: Each child in a list should have a unique "key" prop.
+
+To resolve this, [43:01](https://youtu.be/w7ejDZ8SWv8?t=2581). add a `key` prop to our display element `h3` and set it equal to our `task.id`
+
+```js
+const Tasks = () => {
+  return (
+   <>
+    {tasks.map((task) => (
+        <h3 key={task.id}>{task.text}</h3>
+        ))}
+   </> 
+  )
+}
+
+
+```
+
+## Add State for our Tasks (43:35)
+
+1. import useState at the top of `Tasks.js` with `import { useState } from 'react' `
+2. create state in our `Tasks` function and map through it
+
+```js
+const Tasks = () => {
+// Create STATE for our Tasks at (43:23): https://youtu.be/w7ejDZ8SWv8?t=2603
+// const [tasks, setTasks] = useState("");
+const [tasks, setTasks] = useState(
+    [
+        {
+            id: 1,
+            text: 'Doctors Appointment',
+            day: 'Feb 5th at 2:30pm',
+            reminder: true,
+        },
+        {
+            id: 2,
+            text: 'Meeting in Conference Room',
+            day: 'Feb 6th at 1:30pm',
+            reminder: true,
+        },
+        {
+            id: 3,
+            text: 'Food Shopping',
+            day: 'Feb 5th at 6:30pm',
+            reminder: false,
+        },
+    ]
+);
+
+  return (
+   // Empty fragment at (41:36)
+   // can NOT do tasks.push() (44:31) b/c state is immutable. 
+   //You have to recreate state and push it down.
+//    setTasks([...tasks, {}]) spreader operator (44:48)
+   <>
+        {tasks.map((task) => (
+            <h3 key={task.id}>{task.text} - {task.id}</h3>
+            ))}
+   </> 
+  )
+}
+
+```
+
+
+At [45:05], we'll want another component for the tasks themselves. 
+you could use something like the **Context API** or **Redux** to have a store that hovers over your UI and pull different peices of state from.
+
+We will put it in our **GLOBAL STATE**  in `App.js` and then pass it down through **props**. 
+
+
+## Create Task.js to handle individual Tasks
+
+[47:04](https://youtu.be/w7ejDZ8SWv8?t=2824).
+
