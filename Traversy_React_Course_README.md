@@ -415,3 +415,443 @@ We will put it in our **GLOBAL STATE**  in `App.js` and then pass it down throug
 
 [47:04](https://youtu.be/w7ejDZ8SWv8?t=2824).
 
+Updated `App.js` with _Task STATE_ and passing it to `Tasks.js` via props: 
+```js
+
+import Header from './components/Header'
+import Tasks from './components/Tasks'
+import { useState } from 'react' //added (45:38)
+
+
+function App() {
+
+  const [tasks, setTasks] = useState(
+      [
+          {
+              id: 1,
+              text: 'Doctors Appointment',
+              day: 'Feb 5th at 2:30pm',
+              reminder: true,
+          },
+          {
+              id: 2,
+              text: 'Meeting in Conference Room',
+              day: 'Feb 6th at 1:30pm',
+              reminder: true,
+          },
+          {
+              id: 3,
+              text: 'Food Shopping',
+              day: 'Feb 5th at 6:30pm',
+              reminder: false,
+          },
+      ]
+  );
+
+
+  return ( 
+    <div className="container">
+      <Header />
+    <code>My Tasks:</code>
+      <Tasks tasks={tasks} />
+    </div>    
+  );
+}
+
+```
+
+**AND THEN IN `Tasks.js`**: 
+```js
+import Task from './Task'
+// import App from './../App'
+
+const Tasks = ({ tasks }) => {
+
+  return (
+    <>
+        {tasks.map((task) => (
+            //COMMENTS IN HERE ARE NOT JSX!!
+            //<h3 key={task.id}>{task.text} - {task.id}</h3>
+                <Task key={task.id} task={task} />
+        ))}
+    </> 
+  )
+}
+
+export default Tasks
+
+```
+
+
+**AND THEN IN `Task.js`**:
+```js
+//We are calling this TASK Component inside the map loop so prop is singular TASK
+const Task = ({ task }) => {
+  return (
+    <div className='task'>
+        <h3>{task.text} ({task.id})</h3>
+        <p>{task.day}</p>
+        <p>{task.reminder.toString()}</p>
+        <p style={{display:'none'}}>{task.id}</p>
+    </div>
+  )
+}
+
+export default Task
+
+```
+
+
+## Install React Icons with npm i react-icons (49:50)
+
+[49:56](https://youtu.be/w7ejDZ8SWv8?t=2996). Install React Icons
+Run: 
+```js
+npm i react-icons
+```
+
+This ADDS `react-icons` to our **package.json**
+```js
+//addded "react-icons": "^4.7.1",
+{
+  "name": "react-task-tracker",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-icons": "^4.7.1",
+    "react-scripts": "5.0.1",
+    "web-vitals": "^2.1.4"
+  },
+  ...
+
+```
+
+
+**THEN we can call the X icon with `<FaTimes />` just like a Component Tag**
+```js
+import { FaTimes } from 'react-icons/fa'
+
+const Task = ({ task }) => {
+  return (
+    <div className='task'>
+        <h3>{task.text} ({task.id})  
+            <FaTimes />
+        </h3>
+        <p>{task.day}</p>
+        <p>{task.reminder.toString()}</p>
+        <p style={{display:'none'}}>{task.id}</p>
+    </div>
+  )
+}
+
+```
+
+
+
+## Delete A Task (52:29)
+
+[Delete Task at (52:29)](https://youtu.be/w7ejDZ8SWv8?t=3149). 
+
+
+**IN App.js**
+1. Create the deleteTask function
+2. Pass it to the `Tasks` Component via the **onDelete** prop
+```js
+  //Delete Task (52:38): https://youtu.be/w7ejDZ8SWv8?t=3158
+      const deleteTask = (id) => {
+        console.log('delete clicked', id); 
+      }
+
+  return ( 
+    <div className="container">
+      <Header />
+    <code>My Tasks:</code>
+      <Tasks tasks={tasks} onDelete={ deleteTask } />
+    </div>    
+  );
+
+```
+
+**IN Tasks.js**
+1. Pass in `onDelete` as a prop parameter
+2. Pass it to the `Task` Component via the **onDelete={onDelete}** prop
+```js
+import Task from './Task'
+// import App from './../App'
+
+const Tasks = ({ tasks, onDelete }) => {
+
+  return (
+    <>
+        {tasks.map((task) => (
+            //<h3 key={task.id}>{task.text} - {task.id}</h3>
+                <Task key={task.id} task={task} onDelete={onDelete} />
+        ))}
+    </> 
+  )
+}
+
+```
+
+**FINALLY, IN Task.js**
+1. Pass in `onDelete` as a prop parameter
+2. Add the `onDelete` prop to the **TARGET** element, which here is the `<FaTimes /> Component` and set it to **onDelete={onDelete}**
+3. Thus, only the `App.js` component will _effectively process the onDelete = deleteTask_ functionality? 
+
+```js
+import { FaTimes } from 'react-icons/fa'
+
+const Task = ({ task, onDelete }) => {
+
+    // const displayReminder; 
+    let displayReminder;
+
+    if (task.reminder.toString() == 'true'){
+       displayReminder = "Reminder is On.";
+    }else{
+        displayReminder = "Reminder is Off.";
+    }
+     
+  return (
+    <div className='task'>
+        <h3>{task.text} ({task.id})  
+            <FaTimes style={{ color: 'red', cursor: 'pointer' }}
+                onClick={onDelete}
+            />
+        </h3>
+        <p>{task.day}</p>
+        <p>{task.reminder.toString()}</p>
+        <p>{displayReminder}</p>
+        <p style={{display:'none'}}>{task.id}</p>
+        
+    </div>
+  )
+}
+
+```
+
+This returns the ENTIRE object. 
+
+To get JUST the Task.id at [54:30](https://youtu.be/w7ejDZ8SWv8?t=3270). change the **onClick** function in **Task.js**
+```js
+    //  onClick={onDelete} See (54:30)
+    onClick={() => onDelete(task.id)} //consoles 1, 2 or 3 etc.
+
+```
+
+
+**COMPLETE THE DELETE ACTION AT (55:30)**
+```js
+  //Delete Task (52:38): https://youtu.be/w7ejDZ8SWv8?t=3158
+      const deleteTask = (id) => {
+        // console.log('delete clicked', id); 
+        // setTasks(tasks.filter( () => )); //filter takes an arrow function
+        //See (55:30): https://youtu.be/w7ejDZ8SWv8?t=3330
+        setTasks(tasks.filter((task) => task.id =! id));
+      }
+
+//Filter out the Matching id, simply becomes :
+      const deleteTask = (id) => {
+        setTasks(tasks.filter((task) => task.id =! id));
+      }
+
+```
+
+---
+---
+>*See Folder 3.Min_56_to_103*
+---
+
+### Display Message When No Tasks Exists (Deleted All of them)
+
+
+[Starts HERE (55:39)](https://youtu.be/w7ejDZ8SWv8?t=3339).
+
+RECAP - We are able to "_remove_" a task by simply setting `setTasks()` to the **filtered tasks WITHOUT the id passed in (clicked)**
+
+```js
+      const deleteTask = (id) => {
+        //See (55:30): https://youtu.be/w7ejDZ8SWv8?t=3330
+        // != single equal sign worked, but he used two, compare data type? check:
+        setTasks(tasks.filter((task) => task.id !== id));
+      }
+
+```
+
+
+
+To display a message when there are no tasks to display, wrap the `<Tasks />` component in a `{ternary operator}`:
+```js
+  return ( 
+    <div className="container">
+      <Header />
+    <code>My Tasks:</code>
+      {/* <Tasks tasks={tasks} onDelete={ deleteTask } /> */}
+      {/* Wrap Tasks component in {} and check length */}
+      { tasks.length > 0 ? <Tasks tasks={tasks} onDelete={ deleteTask } /> : <p style={{color:'red'}}>No Tasks To Display.</p> }
+    </div>    
+  );
+
+```
+
+
+### Toggle Reminder Function in App.js (47:40)
+
+[47:40] - 
+
+In `App.js` create the `toggleReminder` function and pass it to `<Tasks />` component via props:
+```js
+//toggleReminder function: 
+      const toggleReminder = (id) => {
+        console.log(id);         
+      }
+
+//Key change to App.js' return: 
+onToggle={ toggleReminder }
+
+//App.js' return statement
+  return ( 
+    <div className="container">
+      <Header />
+    <code>My Tasks:</code>
+      {/* <Tasks tasks={tasks} onDelete={ deleteTask } /> */}
+      {/* Wrap Tasks component in {} and check length */}
+      { tasks.length > 0 ? 
+        <Tasks 
+          tasks={tasks} 
+          onDelete={ deleteTask } 
+          onToggle={ toggleReminder }
+          /> : <p style={{color:'red'}}>No Tasks To Display.</p> }
+    </div>    
+  );
+
+```
+
+**IN `Tasks.js` we pass it through via props and `<Task />` component via props:** 
+```js
+const Tasks = ({ tasks, onDelete, onToggle }) => {
+
+  return (
+    <>
+        {tasks.map((task) => (
+            //<h3 key={task.id}>{task.text} - {task.id}</h3>
+                <Task 
+                    key={task.id} 
+                    task={task} 
+                    onDelete={onDelete} 
+                    onToggle={onToggle}
+                />
+        ))}
+    </> 
+  )
+}
+
+
+```
+
+
+**THEN IN Task.js**
+```js
+//Target the outter (parent) div with `onDoubleClick={}`
+ <div className='task' onDoubleClick={() => onToggle(task.id)}>
+```
+```js
+//So it becomes: 
+const Task = ({ task, onDelete, onToggle }) => {
+   
+  return (
+    //See (59:05)
+    <div className='task' onDoubleClick={() => onToggle(task.id)}>
+        <h3>{task.text} ({task.id})  
+            <FaTimes style={{ color: 'red', cursor: 'pointer' }}
+              //  onClick={onDelete} See (54:30)
+              onClick={() => onDelete(task.id)}
+            />
+        </h3>
+        <p>{task.day}</p>
+        <p>{task.reminder.toString()}</p>
+        <p>{displayReminder}</p>
+        <p style={{display:'none'}}>{task.id}</p>
+        
+    </div>
+  )
+}
+
+```
+
+**THEN BACK IN `App.js`, we will complete our `toggleReminder` function using .map():**
+```js
+  //Toggle Reminder (57:40): 
+      const toggleReminder = (id) => {
+        // console.log(id); 
+        // See 1:01:20
+        setTasks(tasks.map((task) => task.id === id ? { ...task, reminder: !task.reminder} : task)   
+        )         
+      }
+
+```
+
+
+**IN `Task.js` we can add conditional formatting with a ternary operator** [See 1:02:40](https://youtu.be/w7ejDZ8SWv8?t=3760).
+
+```js
+//We want to set 'true' reminders to CSS class 'task reminder' in index.css:
+.task.reminder {
+  border-left: 5px solid green;
+}
+//Using string interpolation: (Setting false to '' or 'task' had same result)
+<div className={`task ${task.reminder ? 'reminder' : 'task'}`} onDoubleClick={() => onToggle(task.id)}>
+
+```
+
+Full `Task.js` return statement: 
+```js
+  return (
+    // <div className='task' onDoubleClick={() => onToggle(task.id)}>
+    //See (1:02:08) to add ternary operator on parent div classname, if task.remidner true/false
+    // Ternary logic all in the template literal / string interpolation `` and ${}
+    <div className={`task ${task.reminder ? 'reminder' : 'task'}`} onDoubleClick={() => onToggle(task.id)}>
+        <h3>{task.text} ({task.id})  
+            <FaTimes style={{ color: 'red', cursor: 'pointer' }}
+              //  onClick={onDelete} See (54:30)
+              onClick={() => onDelete(task.id)}
+            />
+        </h3>
+        <p>{task.day}</p>
+        <p>{task.reminder.toString()}</p>
+        <p>{displayReminder}</p>
+        <p style={{display:'none'}}>{task.id}</p>
+        
+    </div>
+  )
+
+```
+
+
+Alternatively, we can do the same with our if statement above the `Task.js` return(). 
+```js
+
+    let displayReminder;
+    let setTaskCSS;
+
+    if (task.reminder.toString() == 'true'){
+       displayReminder = "Reminder is On.";
+       setTaskCSS = 'task reminder';
+    }else{
+        displayReminder = "Reminder is Off.";
+        setTaskCSS = 'task'; 
+    }
+
+//See (1:02:08) to add ternary operator on parent div classname, if task.remidner true/false
+    // <div className={`task ${task.reminder ? 'reminder' : ''}`} onDoubleClick={() => onToggle(task.id)}>
+    <div className={`${setTaskCSS}`} onDoubleClick={() => onToggle(task.id)}>
+{/*Don't need template literal here on className:*/}
+    <div className={setTaskCSS} onDoubleClick={() => onToggle(task.id)}>
+
+```
+
