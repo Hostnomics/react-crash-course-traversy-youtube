@@ -855,3 +855,176 @@ Alternatively, we can do the same with our if statement above the `Task.js` retu
 
 ```
 
+
+---
+>*See Folder 4.Min_104_to_114*
+---
+---
+
+## Add Task (1:03:19)
+
+[Add Task starts at 1:03:19](https://youtu.be/w7ejDZ8SWv8?t=3799).
+
+**Similar To TTH AddPlayerForm.js**: https://tinyurl.com/tth-AddPlayerForm
+
+**Which used TTH App.js' handleAddPlayer function**: https://tinyurl.com/tth-handleAddPlayer
+
+---
+
+>Adding Tasks Steps: 
+1. Add `AddTask.js`
+2. Return html Form. 
+3. import into App.js and place with `<AddTask />
+
+
+**In AddTask.js** (1:06:30) we want **COMPONENT STATE** not **APP STATE** so we'll add state in `AddTask.js`: 
+1. import `{ useState }`
+2. Create state for each input in `AddTask`
+```js
+import { useState } from 'react' //added (1:06:31)
+
+const AddTask = () => {
+    const [text, setText] = useState('');
+    const [day, setDay] = useState('');
+    const [reminder, setReminder] = useState(false);
+
+}
+
+```
+
+3. Add `value={text}` and `onChange` function to Add Task text field: 
+    - onChange is a constrolled component, fires off as soon as you start typing (1:07:25)
+    - Similar to TTH AddPlayerForm.js: https://tinyurl.com/tth-AddPlayerForm
+        - Which used TTH App.js `handleAddPlayer` function: https://tinyurl.com/tth-handleAddPlayer
+
+```js
+        <input 
+                type="text" 
+                placeholder='Add Task'
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+                // similar to: https://tinyurl.com/tth-AddPlayerForm
+            />
+
+```
+
+4. Do the same with `day` and `reminder` checkbox with the following changes: 
+    - checkbox boolean: `onChange={(e) => setReminder(e.currentTarget.checked)}`
+```js
+//Day text field: 
+    <input 
+        type="text" 
+        placeholder='Add Day & Time'
+        value={day}
+        onChange={(e) => setDay(e.target.value)}    
+    />
+
+//Reminder Checkbox: 
+    <input 
+        type="checkbox" 
+        value={reminder}
+        onChange={(e) => setReminder(e.currentTarget.checked)}    
+    />
+
+```
+
+
+**USING REACT DEV TOOLS _(Components tab)_ WE CAN TEST OUR INPUT COMPONENTS**
+![React Dev Tools Testing Input Fields](https://i.imgur.com/Hl30Iis.png)
+
+
+
+**IN App.js Create addTask Function and hook it up:**
+```js
+
+//Add Task Function (1:09:10)
+const addTask = (task) => {
+  console.log(task); 
+}
+
+//Use onAdd function
+<AddTask onAdd={} />
+
+
+
+```
+
+
+**IN AddTask.js**
+```js
+
+//Set onSubmit on the form. Set to custom onSubmit function we'll define above return()
+<form className='add-form' onSubmit={onSubmit}>
+```
+
+- Check to see if any text is entered (!text)
+- Then `AddTask.js` function **onSubmit()** will call `App.js`'s **onAdd()** function
+- `App.js`'s **onAdd()** fn will currently console.log the task object for now. 
+![New Task Object in Console](https://i.imgur.com/QxXcBmK.png).
+
+```js
+//Pass in onAdd prop
+const AddTask = ({ onAdd }) => {
+    const [text, setText] = useState('');
+    const [day, setDay] = useState('');
+    const [reminder, setReminder] = useState(false);
+
+//Add onSubmit function (1:10:28)
+    const onSubmit = (e) => {
+        e.preventDefault(); 
+        //text validation for empty field:
+        if(!text){
+            alert('Please add a Task.'); 
+            return
+        }
+
+        onAdd({ text, day, reminder }); 
+
+        //Clear the form after submit
+        setText(''); 
+        setDay('');
+        setReminder(false); 
+    }
+
+// To set the checkbox back to UNCHECKED, use value `checked={reminder}` which is intialized as false:
+    <input 
+        type="checkbox" 
+        checked={reminder}
+        value={reminder}
+        onChange={(e) => setReminder(e.currentTarget.checked)}    
+    />
+```
+
+
+
+addTask function: 
+1. Used TTH's unique id solution instead of his random number
+2. Key logic here: 
+
+```js
+  //(1:13:55) - newTask with seperator operator
+    const newTask = { id, ...task}
+    setTasks([...tasks, newTask])
+
+```
+
+```js
+//TTH solution for unique id: https://tinyurl.com/tth-handleAddPlayer
+      const currentTaskNum = tasks.length + 1; 
+      const [nextTaskId, setNextTaskId] = useState(currentTaskNum); 
+
+//Add Task Function (1:09:10)
+const addTask = (task) => {
+  // console.log(task); 
+  // (1:13:16) - solution for auto generate unique id, his solution just generates random number..
+      // const id = Math.floor(Math.random() * 10000) + 1; 
+    const id = nextTaskId; 
+    setNextTaskId(prevId => prevId + 1); 
+  //(1:13:55) - newTask with seperator operator
+    const newTask = { id, ...task}
+    setTasks([...tasks, newTask])
+}
+
+```
+
+
