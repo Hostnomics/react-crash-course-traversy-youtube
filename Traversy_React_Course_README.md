@@ -1027,4 +1027,13 @@ const addTask = (task) => {
 
 ```
 
+---
+---
+>*See folder `5.Min_115_to_`*
+---
+
+
+### Add Button toggles the _Add Task Form_ (1:14:47)
+
+[Start the Add Button toggle form (1:14:47)](https://youtu.be/w7ejDZ8SWv8?t=4487). 
 
