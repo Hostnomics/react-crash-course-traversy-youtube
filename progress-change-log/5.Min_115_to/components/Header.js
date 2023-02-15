@@ -12,15 +12,15 @@ const Header = ({title, onAdd, showAddTask }) => {
 
     // }
 
-    let toggleAddButton;
-    let toggleHideButton; 
+    let buttonText;
+    let buttonColor; 
 
     if (showAddTask.toString() === 'true'){
-        toggleAddButton = "display:'none'";
-        toggleHideButton = "display:'inline'";
+        buttonText = "Hide Form";
+        buttonColor = "red";
     }else{
-        toggleAddButton = "display:'inline'";
-        toggleHideButton = "display:'none'";
+        buttonText = "Add Task/Show Form";
+        buttonColor = "green";
     }
 
 
@@ -28,8 +28,9 @@ const Header = ({title, onAdd, showAddTask }) => {
      <header className='header'>
         {/* <h1 style={{ color: 'red', backgroundColor: 'black' }}>{title}</h1>  inline css (31:30) */}
         <h1>{title}</h1>
-        <Button color='green' text='Add' onClick={onAdd} style={{toggleAddButton}} />
-        <Button color='red' text='Hide Form' onClick={onAdd} style={{toggleHideButton}} />  
+{/* My solution without ternary operator: */}
+        <Button color={buttonColor} text={buttonText} onClick={onAdd} />
+
         {/* <p style={{display:'none'}}>{task.id}</p> */}
      </header>
    )
