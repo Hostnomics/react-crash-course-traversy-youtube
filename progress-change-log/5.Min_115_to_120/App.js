@@ -71,7 +71,11 @@ const addTask = (task) => {
 
   return ( 
     <div className="container">
-        <Header onAdd={() => setShowAddTask(!showAddTask)} showAddTask={showAddTask}/>
+        <Header 
+          onAdd={() => setShowAddTask(!showAddTask)} 
+          showAdd={showAddTask}
+
+        />
         {/* <AddTask onAdd={addTask} tasks={tasks} /> */}
         {/* Added (1:15:22). (Also don't need to pass entire tasks object to AddTask.js) */}
         {showAddTask && <AddTask onAdd={addTask} />}

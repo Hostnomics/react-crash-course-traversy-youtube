@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import Button from './Button'
 
 // const Header = (props) => {
-const Header = ({title, onAdd, showAddTask }) => {
+const Header = ({title, onAdd, showAdd }) => {
 
 // Remove Header.js' custom onClick function and use onAdd instead (1:16:41): https://youtu.be/w7ejDZ8SWv8?t=4601
     // const onClick = () => {
@@ -14,8 +14,8 @@ const Header = ({title, onAdd, showAddTask }) => {
 
     let buttonText;
     let buttonColor; 
-
-    if (showAddTask.toString() === 'true'){
+//changed prop to showAdd (1:17:33)
+    if (showAdd.toString() === 'true'){
         buttonText = "Hide Form";
         buttonColor = "red";
     }else{
@@ -29,7 +29,10 @@ const Header = ({title, onAdd, showAddTask }) => {
         {/* <h1 style={{ color: 'red', backgroundColor: 'black' }}>{title}</h1>  inline css (31:30) */}
         <h1>{title}</h1>
 {/* My solution without ternary operator: */}
-        <Button color={buttonColor} text={buttonText} onClick={onAdd} />
+        {/* <Button color={buttonColor} text={buttonText} onClick={onAdd} /> */}
+
+{/* His ternary solution (1:17:59) */}
+    <Button color={showAdd ? 'red' : 'green'} text={showAdd ? 'Hide Form' : 'Add Task/Show Form'} onClick={onAdd} />
 
         {/* <p style={{display:'none'}}>{task.id}</p> */}
      </header>

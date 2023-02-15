@@ -1037,3 +1037,112 @@ const addTask = (task) => {
 
 [Start the Add Button toggle form (1:14:47)](https://youtu.be/w7ejDZ8SWv8?t=4487). 
 
+In App.js add state for form toggle
+
+```js
+//Add state for the toggle form: 
+const [showAddTask, setShowAddTask] = useState(false); 
+
+```
+
+### Shorter Ternary operator when only need if true do x
+
+```js
+//If `showAddTask` is true then show the AddTask form. If false, do nothing (don't reveal)
+{showAddTask && <AddTask onAdd={addTask} />}
+
+```
+
+**Add Button is in Header.js (_originally from Button.js_)**
+1. So in App.js, add the prop
+
+```js
+  return ( 
+    <div className="container">
+        <Header onAdd={() => setShowAddTask(!showAddTask)} />
+
+```
+
+2. Then in **Header.js** pass in the **prop `onAdd`: 
+```js
+const Header = ({title, onAdd }) => {
+
+// Remove Header.js' custom onClick function and use onAdd instead (1:16:41): https://youtu.be/w7ejDZ8SWv8?t=4601
+    // const onClick = () => {
+    //     console.log('clicked from Header.js')
+
+    // }
+
+   return (
+     <header className='header'>
+        {/* <h1 style={{ color: 'red', backgroundColor: 'black' }}>{title}</h1>  inline css (31:30) */}
+        <h1>{title}</h1>
+        <Button color='green' text='Add' onClick={onAdd}/>     
+     </header>
+   )
+ }
+
+```
+
+**Updated `Header.js` with my soln to "toggle" the show form/hide form button**:
+```js
+
+//Passed the `showAddTask` state to the <Header /> component in App.js by adding prop `showAddTask`:
+    <Header onAdd={() => setShowAddTask(!showAddTask)} showAddTask={showAddTask}/>
+
+
+// const Header = (props) => {
+const Header = ({title, onAdd, showAddTask }) => {
+
+// Remove Header.js' custom onClick function and use onAdd instead (1:16:41): https://youtu.be/w7ejDZ8SWv8?t=4601
+    // const onClick = () => {
+    //     console.log('clicked from Header.js')
+
+    // }
+
+    let buttonText;
+    let buttonColor; 
+
+    if (showAddTask.toString() === 'true'){
+        buttonText = "Hide Form";
+        buttonColor = "red";
+    }else{
+        buttonText = "Add Task/Show Form";
+        buttonColor = "green";
+    }
+
+
+   return (
+     <header className='header'>
+        {/* <h1 style={{ color: 'red', backgroundColor: 'black' }}>{title}</h1>  inline css (31:30) */}
+        <h1>{title}</h1>
+{/* My solution without ternary operator: */}
+        <Button color={buttonColor} text={buttonText} onClick={onAdd} />
+
+        {/* <p style={{display:'none'}}>{task.id}</p> */}
+     </header>
+   )
+ }
+
+```
+
+
+### Easier way to Toggle Add/Hide form button with Ternary Operator (1:18:12)
+
+1. Slight change. instead of calling Header prop the same as function name, shorten it to `showAdd`
+2. Use ternary logic for both color and text in one line: 
+
+```js
+{/* His ternary solution (1:17:59) */}
+    <Button color={showAdd ? 'red' : 'green'} text={showAdd ? 'Hide Form' : 'Add Task/Show Form'} onClick={onAdd} />
+
+```
+
+
+---
+---
+**END OF FRONT END, NEXT HE WILL COVER http STUFF AND THE BACKEND WITH `JSON Server` (1:19:24)**
+---
+
+[Pick up with JSON Server at (1:19:24)](https://www.youtube.com/watch?v=w7ejDZ8SWv8&t=315s). 
+
